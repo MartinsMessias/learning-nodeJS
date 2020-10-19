@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: teal;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+    nav {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      background-color: honeydew;
+      align-items: center;
+      position: fixed;
+      width: 100vw;
+      box-shadow: 0px 0px 20px black;
+    }
+    #logo {
+      height: 60px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      align-self: stretch;
+      height: 100vh;
+    }
+    input {
+      padding: 10px;
+      border: 0px;
+      border-radius: 8px;
+      width: 90%;
+      height: 2.5rem;
+      font-size: 1.2rem;
+      background-color: honeydew;
+      margin-bottom: 5px;
+      outline: none;
+    }
+
+    textarea {
+      padding: 10px;
+      background-color: honeydew;
+      border: 0px;
+      border-radius: 8px;
+      width: 90%;
+      font-size: 1.2rem;
+      outline: none;
+    }
+    #messages {
+      max-height: 40%;
+      width: 90%;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      padding: 12px;
+      border-radius: 8px;
+      color: black;
+      background-color: honeydew;
+      display: none;
+      overflow-y: scroll;
+    }
+  </style>
+  <body>
+    <nav>
+      <img
+        id="logo"
+        src="https://www.mercury.chat/assets/Home/Icone_top_page/mercury-whatsapp-text-message.png"
+        alt="logo"
+      />
+    </nav>
+    <div class="container">
+      <div id="messages"></div>
+      <input type="text" id="name" placeholder="Your name" required />
+      <textarea
+        rows="5"
+        cols="100"
+        id="message"
+        placeholder="Your message here."
+        onKeyPress="sendMessage();"
+      ></textarea>
+    </div>
+
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script>
+      var socket = io("http://localhost:3000");
+      socket.on("server_hello", receiverMessage);
+
+      function sendMessage() {
+        if (event.keyCode === 13 && !event.shifKey) {
+          var name = document.getElementById("name").value;
+          var text = document.getElementById("message").value;
+
+          document.getElementById("message").value = "";
+
+          socket.emit("client_hello", { name, text });
+        }
+      }
+
+      function receiverMessage(data) {
+        var element = document.getElementById("messages");
+        element.style.display = "block";
+        element.innerHTML += `
+          <div id='msg-item'><b>${data.name}</b><br/>${data.text}</div>
+        `;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+html
+    head
+        title GG FlutterDINO
+    body
+    each val in data
+        li 
+            div=val.nome
+            div=val.categoria
+            br
+    br
+    br
+
+    form(action="/", method="post")
+        
+        label(for="nome")
+        input(type="text", name="nome" required)
+        
+        label(for="categoria")
+        select(name="categoria" required)
+            option Back-End
+            option Desenvolvimento de jogos
+            option Front-End
+            option Mobile
+        
+        input(type="submit", value="enviar")
